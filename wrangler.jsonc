@@ -1,0 +1,94 @@
+// Purpose: Wrangler configuration for the OWEN Worker (bindings, assets, envs).
+// Used by: `wrangler dev` / `wrangler deploy` to build and run the Worker.
+// Assumptions: values here are non-secret defaults; secrets are set via `wrangler secret`.
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */ {
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "owen",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-10-08",
+"compatibility_flags": ["global_fetch_strictly_public"],
+  "workers_dev": true,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./public"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "ai": {
+    "binding": "AI"
+  },
+  "browser": {
+    "binding": "BROWSER"
+  },
+  "r2_buckets": [
+    { "bucket_name": "owen-bucket", "binding": "OWEN_BUCKET" },
+    { "bucket_name": "owen-ingest", "binding": "OWEN_INGEST" },
+    { "bucket_name": "owen-notes", "binding": "OWEN_NOTES" },
+    { "bucket_name": "owen-test", "binding": "OWEN_TEST" },
+    { "bucket_name": "owen-uploads", "binding": "OWEN_UPLOADS" },
+    { "bucket_name": "own-ingest", "binding": "OWN_INGEST" },
+    { "bucket_name": "owen-analytics", "binding": "OWEN_ANALYTICS" }
+  ],
+  "kv_namespaces": [
+    { "binding": "DOCS_KV", "id": "d678f47eeaf944b1b96313af8fdd15b2" },
+    { "binding": "OWEN_DOC_CACHE", "id": "640f9257248b4d7c8ca1a9f6910f124c" },
+    { "binding": "OWEN_DIAG_KV", "id": "d678f47eeaf944b1b96313af8fdd15b2" }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "PRESENCE_ROOM",
+        "class_name": "PresenceRoom"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "presence-v1",
+      "new_sqlite_classes": ["PresenceRoom"]
+    }
+  ],
+  "vars": {
+    "OPENAI_API_BASE": "https://api.openai.com/v1",
+    "GEMINI_API_BASE": "https://generativelanguage.googleapis.com/v1beta",
+    "GEMINI_QUIZ_MODEL": "gemini-3.1-pro-preview",
+    "GEMINI_QUIZ_TIMEOUT_MS": "180000",
+    "GEMINI_QUIZ_THINKING_LEVEL": "medium",
+    "GEMINI_QUIZ_MAX_OUTPUT_TOKENS": "12000",
+    "DEFAULT_MODEL": "gpt-5.2",
+    "DEFAULT_TEXT_MODEL": "gpt-5.2",
+    "SYSTEM_NAME": "OWEN",
+    "ADMIN_KEY": "set-me",
+    "CF_ACCOUNT_ID": "4498532b94311a97b214f7df1fc8db76",
+    "DEV_AUTH_ENABLED": "true",
+    "ENVIRONMENT": "development"
+  },
+	"upload_source_maps": false,
+  "env": {
+    "production": {
+      "ai": {
+        "binding": "AI"
+      },
+      "browser": {
+        "binding": "BROWSER"
+      },
+      "r2_buckets": [
+        { "bucket_name": "owen-bucket", "binding": "OWEN_BUCKET" },
+        { "bucket_name": "owen-ingest", "binding": "OWEN_INGEST" },
+        { "bucket_name": "owen-notes", "binding": "OWEN_NOTES" },
+        { "bucket_name": "owen-test", "binding": "OWEN_TEST" },
+        { "bucket_name": "owen-uploads", "binding": "OWEN_UPLOADS" },
+        { "bucket_name": "own-ingest", "binding": "OWN_INGEST" },
+        { "bucket_name": "owen-analytics", "binding": "OWEN_ANALYTICS" }
+      ],
+      "kv_namespaces": [
+        { "binding": "OWEN_DIAG_KV", "id": "d678f47eeaf944b1b96313af8fdd15b2" },
+        { "binding": "OWEN_DOC_CACHE", "id": "set-me" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+	"name": "owen",
+	"description": "Institution-private lecture-to-approved-study-artifact workflow for medical education",
+	"type": "module",
+	"private": true,
+	"cloudflare": {
+		"label": "OWEN",
+		"products": [
+			"Workers",
+			"Workers AI",
+			"AI Gateway"
+		],
+		"categories": [
+			"ai"
+		],
+		"docs_url": "https://developers.cloudflare.com/workers-ai/",
+		"preview_icon_url": "https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/a974bd55-20c6-4656-fa29-1551d43ddc00/public",
+		"preview_image_url": "https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/65dd8441-89d3-491d-c5a1-0a000d070700/preview",
+		"publish": true
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "0.8.44",
+		"@cloudflare/workers-types": "^4.20251111.0",
+		"@types/node": "24.0.4",
+		"jsdom": "^26.1.0",
+		"typescript": "^5.9.3",
+		"vitest": "3.2.4",
+		"wrangler": "4.21.2"
+	},
+	"scripts": {
+		"arch:report": "npm run build:prompts && node --experimental-strip-types --loader ./scripts/ts-loader.mjs ./scripts/architecture-report.mjs",
+		"build": "npm run build:prompts && wrangler deploy --dry-run --config wrangler.jsonc --env=\"\"",
+		"build:prompts": "node ./scripts/build-prompt-registry.mjs",
+		"bundle:audit": "npm run build:prompts && node --experimental-strip-types --loader ./scripts/ts-loader.mjs ./scripts/bundle-audit.mjs",
+		"cf-typegen": "wrangler types --config wrangler.jsonc",
+		"check": "npm run typecheck && npm test && npm run build",
+		"clean:install": "rm -rf node_modules && npm install",
+		"deploy": "npm run build:prompts && wrangler deploy --config wrangler.jsonc --env=\"\"",
+		"dev": "npm run build:prompts && wrangler dev --local --config wrangler.jsonc",
+		"export:llm-context": "node ./scripts/export-llm-context.js",
+		"prompt:inventory": "npm run build:prompts && node --experimental-strip-types --loader ./scripts/ts-loader.mjs ./scripts/prompt-inventory.mjs",
+		"route:graph": "npm run build:prompts && node --experimental-strip-types --loader ./scripts/ts-loader.mjs ./scripts/route-graph.mjs",
+		"start": "npm run build:prompts && wrangler dev --config wrangler.jsonc --env=\"\"",
+		"test": "npm run build:prompts && node --experimental-strip-types --loader ./scripts/ts-loader.mjs --test $(find tests -type f \\( -name '*.test.ts' -o -name '*.test.js' \\) | sort)",
+		"test:parity": "npm run build:prompts && node --experimental-strip-types --loader ./scripts/ts-loader.mjs --test $(find tests/runtime/parity -type f \\( -name '*.test.ts' -o -name '*.test.js' \\) | sort)",
+		"test:smoke": "node --experimental-strip-types --loader ./scripts/ts-loader.mjs --test tests/analytics/analytics_metadata_filter.test.ts tests/anki/anki_generate_uploads.test.ts tests/anki/anki_publish_api.test.ts tests/library/library_category_tabs.test.js",
+		"typecheck": "npm run build:prompts && tsc --noEmit -p tsconfig.build.json"
+	}
+}
